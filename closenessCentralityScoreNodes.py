@@ -13,7 +13,7 @@ print("Initializing")
 
 #get graph from description
 print("Fetching graph")
-G = ox.graph_from_place('Bornholm', network_type='drive')
+G = ox.load_graphml("./savedGraphs/bornholm.graphml")
 G = ox.project_graph(G)
 
 node_centrality = nx.closeness_centrality(G)
