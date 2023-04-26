@@ -10,12 +10,13 @@ import networkx as nx
 #start here by defining area and grid size:
 gridSize = (35,35)
 guesses = 3
-place = 'Bornholm'
-showGrid = True
+place = 'malta'
+showGrid = False
 showCenterPoints = False
-showMidpoints = False
+showMidpoints = True
 showRegionBoxes = False
 showConvexHullOfRegions = True
+diagonalDirection = 'B'
 
 graph = nx.MultiGraph
 
@@ -91,9 +92,11 @@ for k in range (0, width + height - 1):
     for j in range(0, k+1):
         i = k-j
         if (i < height and j < width):
-            index = height + j * width - i - 1
-            if k < 5:
-                print(index)
+            index = 0
+            if diagonalDirection == 'A':
+                index = j * width + i
+            else:
+                index = height + j * width - i - 1
             b = gridWithBoxes[index]
             #if b.totalWeight > 0:
             if b.inside:
