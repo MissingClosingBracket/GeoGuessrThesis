@@ -6,7 +6,7 @@ import networkx as nx
 
 #Bornholm or malta?
 #place = 'bornholm'
-place = 'bornholm'
+place = 'malta'
 
 graph = nx.MultiGraph
 
