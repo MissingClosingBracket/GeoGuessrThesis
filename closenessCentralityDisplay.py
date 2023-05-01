@@ -12,7 +12,7 @@ import itertools
 #start here by defining area and grid size:
 gridSize = (35,35)
 guesses = 3
-place = 'malta'
+place = 'bornholm'
 showGrid = False
 showCenterPoints = False
 showRegionBoxes = False
@@ -127,17 +127,18 @@ def sortLon(elem):
 
 #can't use the nx.closeness_centrality, as it uses dijkstra's shortest path. 
 #So, the Closeness Score is calculated manually. This manual approach has complexity N^2
-#Besides, the pints have to be weighted, so a manual approach with weighted haversine distance as dist is the only correct approach
+#Besides, the points have to be weighted, so a manual approach with weighted haversine distance as dist is the only correct approach
 #Bornholm:
-    #(93677.40258005913, (14.7477921, 55.17276595))
-    #(75374.31045029823, (14.895294750000001, 55.1190968))
-    #(58486.26544376647, (15.0915562, 55.05980545))
+    #(4485.555036377326, (14.75867745, 55.1797539))
+    #(5419.95747443702, (14.89183065, 55.119337200000004))
+    #(4311.480444962821, (15.06827895, 55.061246249999996))
 #Malta:
-    #(646800.2399866901, (14.3317102, 35.983201287499995))
-    #(266366.1926535032, (14.4542256625, 35.893188300000006))
-    #(320958.30164271407, (14.5114906125, 35.8628883625))
-#Use simplifier for Malta due to comp. complexity.
+    #(27498.939631886613, (14.3519672375, 35.9657817))
+    #(11145.199262151133, (14.45627495, 35.8945337375))
+    #(14340.606536047286, (14.510572087500002, 35.862443375))
+
 '''
+#Use simplifier for Malta due to comp. complexity.
 simplifier = 4
 for x in range(0, guesses):
     points = []
@@ -167,20 +168,19 @@ for x in range(0, guesses):
     for i in range(len(points)):
         temp = 0
         for n in range(len(points)):
-            temp += getDistance(points[i][0],(points[n][0]))
+            temp += getDistance(points[i][0],(points[n][0])) * points[n][1]
         centralityOfNodes[temp] = points[i][0]
 
     sortedByTotalDist = dict(sorted(centralityOfNodes.items()))
     print(next(iter( sortedByTotalDist.items() )))
 '''
-
 #Bornholm:
-#lats = [14.7477921,14.895294750000001,15.0915562]
-#lons = [55.17276595,55.1190968,55.05980545]
+lats = [14.75867745,14.89183065,15.06827895]
+lons = [55.1797539,55.119337200000004,55.061246249999996]
 
 #Malta:
-lats = [14.3317102,14.4542256625,14.5114906125]
-lons = [35.983201287499995,35.893188300000006,35.8628883625]
+#lats = [14.3519672375,14.45627495,14.510572087500002]
+#lons = [35.9657817,35.8945337375,35.862443375]
 
 for x in range(0, len(lats)):
     ax.scatter(lats[x], lons[x], color=colors[x],s=100,zorder=1000)
