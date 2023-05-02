@@ -1,13 +1,10 @@
 import osmnx as ox
 import geopandas as gpd
-from helperFunctions import getDistance, makeGrid, placeInBoxes, Box
-from shapely.geometry import Point,LineString,mapping
+from helperFunctions import getDistance, makeGrid, placeInBoxes
+from shapely.geometry import Point,mapping
 import matplotlib.lines as lines
 import matplotlib.pyplot as plt
-import statistics
 import networkx as nx
-from typing import List
-import itertools
 
 #start here by defining area and grid size:
 gridSize = (35,35)
