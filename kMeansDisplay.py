@@ -65,13 +65,7 @@ kmeans = KMeans(n_clusters=guesses, n_init=10, random_state=1234, max_iter=1000)
 weightedClusterFit = kmeans.fit([x[0] for x in centerPoints],sample_weight = [x[1] for x in centerPoints])
 predicted_kmeans = kmeans.predict([x[0] for x in centerPoints],sample_weight = [x[1] for x in centerPoints])
 
-print(predicted_kmeans)
-
-#Storing results obtained together with respective city-state labels
-#kmeans_results = pd.DataFrame({"Cluster":predicted_kmeans+1})
-
-#print(kmeans_results)
-
+#append the center points of each cluster into array
 kmeans_clusters = []
 for x in range(0, guesses):
     kmeans_clusters.append([])
@@ -85,15 +79,15 @@ for x in range (0, len(predicted_kmeans)):
     if c == 2:
         kmeans_clusters[2].append(centerPoints[x])
 
-print(kmeans_clusters)
-'''
-#display it
-centroids = kmeans.cluster_centers_
-print(centroids)
-#kmeans.labels_ = np.array([f(x) for x in kmeans.labels_])
-g = sns.scatterplot(data=kmeans_results, x="x", y="y", hue=kmeans.labels_, palette="viridis", s=10)
-fig = plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1], marker="X", c="yellow", s=60, label="Centroids")
-ax = fig.axes.set_facecolor('black')
-plt.legend(loc="upper left")
+#display graph
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+
+for cluster in kmeans_clusters:
+    lats = [x[0][0] for x in cluster]
+    lons = [x[0][1] for x in cluster]
+    weights = [x[1] for x in cluster]
+    ax.scatter(lats, lons, s=[x*10 for x in weights], cmap='viridis')
+
 plt.show()
-'''
