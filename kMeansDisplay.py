@@ -9,26 +9,25 @@ from sklearn.cluster import KMeans
 import seaborn as sns
 import numpy as np
 import pandas as pd
+import matplotlib.colors as mcolors
 
 #start here by defining area and grid size:
-gridSize = (35,35)
 guesses = 3
-place = 'bornholm'
+place = 'malta'
 showGrid = False
 showCenterPoints = False
 showRegionBoxes = False
 showConvexHullOfRegions = True
-diagonalDirection = 'B'
 
 graph = nx.MultiGraph
 
 #Get graph
 if place != 'malta':
-    graph :nx.MultiDiGraph = ox.load_graphml("./savedGraphs/" + place + ".graphml")
+    graph :nx.MultiDiGraph = ox.load_graphml("GeoGuessrThesis/savedGraphs/bornholm.graphml")# + place + ".graphml")
 else:
-    graph1 = ox.load_graphml("./savedGraphs/" + place + "1.graphml")
-    graph2 = ox.load_graphml("./savedGraphs/" + place + "2.graphml")
-    graph3 = ox.load_graphml("./savedGraphs/" + place + "3.graphml")
+    graph1 = ox.load_graphml("GeoGuessrThesis/savedGraphs/" + place + "1.graphml")
+    graph2 = ox.load_graphml("GeoGuessrThesis/savedGraphs/" + place + "2.graphml")
+    graph3 = ox.load_graphml("GeoGuessrThesis/savedGraphs/" + place + "3.graphml")
     graph :nx.MultiGraph = nx.compose_all([graph1, graph2, graph3])
 
 graph = graph.to_undirected()
@@ -59,7 +58,7 @@ for index, row in edges.iterrows():
         centerPoints.append([centerPoint, distance])
 
 #define the number of clusers and number of initial centroid placements (n_init)
-kmeans = KMeans(n_clusters=guesses, n_init=10, random_state=1234, max_iter=1000)
+kmeans = KMeans(n_clusters=guesses, n_init=50, random_state=1234, max_iter=1000)
 
 #make the weighted kmeans fit
 weightedClusterFit = kmeans.fit([x[0] for x in centerPoints],sample_weight = [x[1] for x in centerPoints])
@@ -80,14 +79,22 @@ for x in range (0, len(predicted_kmeans)):
         kmeans_clusters[2].append(centerPoints[x])
 
 #display graph
+cMap = plt.cm.get_cmap('inferno')
+
 fig = plt.figure()
 ax = fig.add_subplot(111)
+ax.axes.set_facecolor('black')
 
-
-for cluster in kmeans_clusters:
-    lats = [x[0][0] for x in cluster]
-    lons = [x[0][1] for x in cluster]
-    weights = [x[1] for x in cluster]
-    ax.scatter(lats, lons, s=[x*10 for x in weights], cmap='viridis')
+for c in range(0, len(kmeans_clusters)):
+    color = cMap(0.3 + c*(1/3))
+    cluster = kmeans.cluster_centers_[c]
+    print(cluster)
+    lats = [x[0][0] for x in kmeans_clusters[c]]
+    lons = [x[0][1] for x in kmeans_clusters[c]]
+    weights = [x[1] for x in kmeans_clusters[c]]
+    ax.scatter(lats, lons, s=[x*5 for x in weights], color=color)
+    ax.scatter(cluster[0], cluster[1], s=50, color='white')
+    ax.scatter(cluster[0], cluster[1], s=25, color='blue')
+    ax.scatter(cluster[0], cluster[1], s=5, color='black')
 
 plt.show()
