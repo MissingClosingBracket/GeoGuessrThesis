@@ -67,6 +67,7 @@ def weightedHaversine(point, data, reverseWeight = False):
             sumList.append(getDistance(point[0], d) * point[1]) 
     return sumList
 
+#Thank you https://github.com/turnerluke/ML-algos/blob/main/k_means/k_means.py for inspiration.
 
 class KMeans:
 
