@@ -161,7 +161,7 @@ cMap = plt.cm.get_cmap('inferno')
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.axes.set_facecolor('black')
-
+print(kmeans_cluster_centroids)
 for c in range(0, len(kmeans_clusters)):
     color = cMap(0.3 + c*(1/3))
     cluster_centroid = kmeans_cluster_centroids[c]

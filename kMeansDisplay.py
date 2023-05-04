@@ -14,10 +14,6 @@ import matplotlib.colors as mcolors
 #start here by defining area and grid size:
 guesses = 3
 place = 'malta'
-showGrid = False
-showCenterPoints = False
-showRegionBoxes = False
-showConvexHullOfRegions = True
 
 graph = nx.MultiGraph
 
@@ -58,7 +54,7 @@ for index, row in edges.iterrows():
         centerPoints.append([centerPoint, distance])
 
 #define the number of clusers and number of initial centroid placements (n_init)
-kmeans = KMeans(n_clusters=guesses, n_init=50, random_state=1234, max_iter=1000)
+kmeans = KMeans(n_clusters=guesses, init='k-means++', max_iter=1000)
 
 #make the weighted kmeans fit
 weightedClusterFit = kmeans.fit([x[0] for x in centerPoints],sample_weight = [x[1] for x in centerPoints])
@@ -77,7 +73,6 @@ for x in range (0, len(predicted_kmeans)):
         kmeans_clusters[1].append(centerPoints[x])
     if c == 2:
         kmeans_clusters[2].append(centerPoints[x])
-
 #display graph
 cMap = plt.cm.get_cmap('inferno')
 
@@ -92,9 +87,21 @@ for c in range(0, len(kmeans_clusters)):
     lats = [x[0][0] for x in kmeans_clusters[c]]
     lons = [x[0][1] for x in kmeans_clusters[c]]
     weights = [x[1] for x in kmeans_clusters[c]]
-    ax.scatter(lats, lons, s=[x*5 for x in weights], color=color)
+    ax.scatter(lats, lons, s=[x*1 for x in weights], color=color)
     ax.scatter(cluster[0], cluster[1], s=50, color='white')
     ax.scatter(cluster[0], cluster[1], s=25, color='blue')
     ax.scatter(cluster[0], cluster[1], s=5, color='black')
 
 plt.show()
+
+'''
+Bornholm:
+[14.76468147 55.15867943]
+[14.92302334 55.1232714 ]
+[15.07548271 55.06935343]
+
+Malta:
+[14.40612363 35.90931744]
+[14.25970596 36.04257726]
+[14.49667782 35.8727472 ]
+'''
