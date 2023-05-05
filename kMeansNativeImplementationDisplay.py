@@ -75,66 +75,57 @@ class KMeans:
         self.n_clusters = n_clusters
         self.max_iter = max_iter
 
-    def fit(self, X_train):
-        points = [x[0] for x in X_train]
-        # Initialize the centroids, using the "k-means++" method, where a random datapoint is selected as the first,
-        # then the rest are initialized w/ probabilities proportional to their distances to the first
-        # Pick a random point from train data for first centroid
-        self.centroids = [random.choice(points)]
+    def fit(self, weightedCenterPoints):
+        centerPoints = [x[0] for x in nodes]
+        self.centroids = [random.choice(centerPoints)]
 
         for _ in range(self.n_clusters-1):
-            # Calculate distances from points to the centroids
-            dists = np.sum([weightedHaversine(centroid, X_train) for centroid in self.centroids], axis=0)
+            # Calculate distances from nodes to the centroids
+            dists = np.sum([weightedHaversine(centroid, nodes) for centroid in self.centroids], axis=0)
             dists /= np.sum(dists)
-            # Choose remaining points based on their distances
-            new_centroid_idx = np.random.choice(range(len(points)), size=1, p=dists)[0]  # Indexed @ zero to get val, not array of val
-            self.centroids += [points[new_centroid_idx]]
+            # Choose remaining nodes based on their distances
+            new_centroid_index = np.random.choice(range(len(centerPoints)), size=1, p=dists)[0]
+            self.centroids += [centerPoints[new_centroid_index]]
 
-        # This method of randomly selecting centroid starts is less effective
-        # min_, max_ = np.min(X_train, axis=0), np.max(X_train, axis=0)
-        # self.centroids = [uniform(min_, max_) for _ in range(self.n_clusters)]
-
-        # Iterate, adjusting centroids until converged or until passed max_iter
         iteration = 0
-
-        while iteration < self.max_iter: #np.not_equal(self.centroids, prev_centroids).any() and 
-            # Sort each datapoint, assigning to nearest centroid
+        while iteration < self.max_iter:
+            # Sort each node, assigning to nearest centroid
             sorted_points = [[] for _ in range(self.n_clusters)]
-            for x in X_train:
+            for x in nodes:
                 dists = weightedHaversine(x, self.centroids, True)
-                centroid_idx = np.argmin(dists)
-                sorted_points[centroid_idx].append(x[0])
+                centroid_index = np.argmin(dists)
+                sorted_points[centroid_index].append(x[0])
 
-            # Push current centroids to previous, reassign centroids as mean of the points belonging to them
+            # Push current centroids to previous, reassign centroids as mean of the nodes belonging to them
             prev_centroids = self.centroids
             self.centroids = [np.mean(cluster, axis=0) for cluster in sorted_points]
             for i, centroid in enumerate(self.centroids):
-                if np.isnan(centroid).any():  # Catch any np.nans, resulting from a centroid having no points
+                if np.isnan(centroid).any():  # Catch any np.nans, resulting from a centroid having no nodes
                     self.centroids[i] = prev_centroids[i]
             iteration += 1
 
     def evaluate(self, X):
         centroids = []
-        centroid_idxs = []
+        centroid_indexes = []
         for x in X:
             dists = weightedHaversine(x, self.centroids, True)
-            centroid_idx = np.argmin(dists)
-            centroids.append(self.centroids[centroid_idx])
-            centroid_idxs.append(centroid_idx)
+            centroid_index = np.argmin(dists)
+            centroids.append(self.centroids[centroid_index])
+            centroid_indexes.append(centroid_index)
 
-        return centroids, centroid_idxs
+        return centroids, centroid_indexes
 
 
 # Create a dataset of 2D distributions
 centers = 3
-X_train = centerPoints
+nodes = centerPoints
 
 # Fit centroids to dataset
 kmeans = KMeans(n_clusters=centers)
-kmeans.fit(X_train)
+kmeans.fit(nodes)
 
 # View results
-class_centers, classification = kmeans.evaluate(X_train)
+centroidForNodeIndex, centroidIndexForNode = kmeans.evaluate(nodes)
 
 #append the center points of each cluster into array
 kmeans_clusters = []
@@ -143,17 +134,17 @@ for x in range(0, guesses):
     kmeans_clusters.append([])
     kmeans_cluster_centroids.append([])
 
-for x in range (0, len(classification)):
-    c = classification[x]
+for x in range (0, len(centroidIndexForNode)):
+    c = centroidIndexForNode[x]
     if c == 0:
         kmeans_clusters[0].append(centerPoints[x])
-        kmeans_cluster_centroids[0] = class_centers[x]
+        kmeans_cluster_centroids[0] = centroidForNodeIndex[x]
     if c == 1:
         kmeans_clusters[1].append(centerPoints[x])
-        kmeans_cluster_centroids[1] = class_centers[x]
+        kmeans_cluster_centroids[1] = centroidForNodeIndex[x]
     if c == 2:
         kmeans_clusters[2].append(centerPoints[x])
-        kmeans_cluster_centroids[2] = class_centers[x]
+        kmeans_cluster_centroids[2] = centroidForNodeIndex[x]
 
 #display graph
 cMap = plt.cm.get_cmap('inferno')
@@ -161,7 +152,6 @@ cMap = plt.cm.get_cmap('inferno')
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.axes.set_facecolor('black')
-print(kmeans_cluster_centroids)
 for c in range(0, len(kmeans_clusters)):
     color = cMap(0.3 + c*(1/3))
     cluster_centroid = kmeans_cluster_centroids[c]
