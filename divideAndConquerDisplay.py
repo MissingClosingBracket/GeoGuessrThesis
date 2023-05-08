@@ -87,7 +87,7 @@ for x in range(0, guesses):
     biggerBoxes.append([])
 currWeight = 0
 currBigBox = 0
-colors = ['yellow', 'purple', 'green', 'blue', 'orange']
+colors = ['yellow', 'purple', 'green', 'blue', 'orange', 'red', 'cyan']
 for k in range (0, width + height - 1):
     for j in range(0, k+1):
         i = k-j
@@ -137,6 +137,7 @@ for x in range(0, len(convexHullsForGuessAreas)):
 if showMidpoints:
     for x in range(0, len(centroids)):
         centroid = centroids[x]
+        print(centroid)
         ax.scatter(centroid.x, centroid.y, color=colors[x],s=100,zorder=1000)
 
 #show centerPoints

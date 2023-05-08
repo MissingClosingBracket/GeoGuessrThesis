@@ -8,14 +8,14 @@ import networkx as nx
 
 #start here by defining area and grid size:
 gridSize = (35,35)
-guesses = 4
-place = 'bornholm'
+guesses = 3
+place = 'malta'
 showGrid = False
 showCenterPoints = False
 showRegionBoxes = False
 showConvexHullOfRegions = True
 diagonalDirection = 'B'
-simplifier = 2
+simplifier = 4
 
 graph = nx.MultiGraph
 
