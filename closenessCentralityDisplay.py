@@ -8,13 +8,14 @@ import networkx as nx
 
 #start here by defining area and grid size:
 gridSize = (35,35)
-guesses = 3
+guesses = 4
 place = 'bornholm'
 showGrid = False
 showCenterPoints = False
 showRegionBoxes = False
 showConvexHullOfRegions = True
 diagonalDirection = 'B'
+simplifier = 2
 
 graph = nx.MultiGraph
 
@@ -134,30 +135,26 @@ def sortLon(elem):
     #(11145.199262151133, (14.45627495, 35.8945337375))
     #(14340.606536047286, (14.510572087500002, 35.862443375))
 
-'''
+finalGuesses = []
+
 #Use simplifier for Malta due to comp. complexity.
-simplifier = 4
 for x in range(0, guesses):
     points = []
 
     for box in biggerBoxes[x]:
         if box.points != []:
             boxPoints = box.points
-            if place == 'bornholm':
-                for point in boxPoints:
-                    points.append(point)
-            else:
-                boxPoints.sort(key=sortLat)
-                boxPoints.sort(key=sortLon)
-                for j in range(0, len(boxPoints), simplifier):
-                    to = j+simplifier
-                    if to > (len(boxPoints) - 1):
-                        to = (len(boxPoints) - 1)
-                    collectedPoints = [boxPoints[k] for k in range(j, to)]
-                    weight = sum(elem[1] for elem in collectedPoints)
-                    lat = sum(elem[0][0] for elem in collectedPoints)/simplifier
-                    lon = sum(elem[0][1] for elem in collectedPoints)/simplifier
-                    points.append([(lat,lon),weight])
+            boxPoints.sort(key=sortLat)
+            boxPoints.sort(key=sortLon)
+            for j in range(0, len(boxPoints), simplifier):
+                to = j+simplifier
+                if to > (len(boxPoints) - 1):
+                    to = (len(boxPoints) - 1)
+                collectedPoints = [boxPoints[k] for k in range(j, to)]
+                weight = sum(elem[1] for elem in collectedPoints)
+                lat = sum(elem[0][0] for elem in collectedPoints)/simplifier
+                lon = sum(elem[0][1] for elem in collectedPoints)/simplifier
+                points.append([(lat,lon),weight])
 
     centralityOfNodes = {}
     print(len(points))
@@ -169,18 +166,22 @@ for x in range(0, guesses):
         centralityOfNodes[temp] = points[i][0]
 
     sortedByTotalDist = dict(sorted(centralityOfNodes.items()))
+    point = next(iter( sortedByTotalDist.items() ))
+    finalGuesses.append(point[1])
     print(next(iter( sortedByTotalDist.items() )))
-'''
+
+
+
 #Bornholm:
-lats = [14.75867745,14.89183065,15.06827895]
-lons = [55.1797539,55.119337200000004,55.061246249999996]
+#lats = [14.75867745,14.89183065,15.06827895]
+#lons = [55.1797539,55.119337200000004,55.061246249999996]
 
 #Malta:
 #lats = [14.3519672375,14.45627495,14.510572087500002]
 #lons = [35.9657817,35.8945337375,35.862443375]
 
-for x in range(0, len(lats)):
-    ax.scatter(lats[x], lons[x], color=colors[x],s=100,zorder=1000)
+for x in range(0, len(finalGuesses)):
+    ax.scatter(finalGuesses[x][0], finalGuesses[x][1], color=colors[x],s=100,zorder=1000)
 
 
 #draw and show

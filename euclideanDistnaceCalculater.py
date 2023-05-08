@@ -1,6 +1,8 @@
 from math import sqrt
 from math import pow
+from helperFunctions import getDistance
 
+#eucl
 def calc(p1,p2):
     x1=p1[0]
     y1=p1[1]
@@ -14,13 +16,29 @@ def calc(p1,p2):
 
     return dist
 
-data1 = [
-(1.8890016, 0.87425904),
-(1.98220248, 0.71230824),
-(2.11406729, 0.68280203),
-(2.25307478, 0.69858443)
-]
-data2 = (2.25307478, 0.69858443)
+#haversine
+def hav(x,y): 
+    return getDistance(x,y)
 
-for entry in data1:
-    calc(entry, data2)
+data1 = [
+    (14.75867745,55.1797539),
+    (14.89183065,55.119337200000004),
+    (15.06827895,55.061246249999996)
+]
+data2 = [
+    (14.76468147,55.15867943),
+    (14.92302334,55.1232714),
+    (15.07548271,55.06935343)
+]
+
+for x in range(0, len(data1)):
+    print(hav(data1[x], data2[x]))
+
+''' used for guess comp. of CC and KMeans
+lats = [14.75867745,14.89183065,15.06827895]
+lons = [55.1797539,55.119337200000004,55.061246249999996]
+
+[14.76468147 55.15867943]
+[14.92302334 55.1232714 ]
+[15.07548271 55.06935343]
+'''

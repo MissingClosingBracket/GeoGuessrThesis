@@ -12,8 +12,8 @@ import pandas as pd
 import matplotlib.colors as mcolors
 
 #start here by defining area and grid size:
-guesses = 3
-place = 'malta'
+guesses = 4
+place = 'bornholm'
 
 graph = nx.MultiGraph
 
@@ -73,6 +73,8 @@ for x in range (0, len(predicted_kmeans)):
         kmeans_clusters[1].append(centerPoints[x])
     if c == 2:
         kmeans_clusters[2].append(centerPoints[x])
+    if c == 3:
+        kmeans_clusters[3].append(centerPoints[x])
 #display graph
 cMap = plt.cm.get_cmap('inferno')
 
@@ -81,7 +83,7 @@ ax = fig.add_subplot(111)
 ax.axes.set_facecolor('black')
 
 for c in range(0, len(kmeans_clusters)):
-    color = cMap(0.3 + c*(1/3))
+    color = cMap(0.3 + c*(1/guesses))
     cluster = kmeans.cluster_centers_[c]
     print(cluster)
     lats = [x[0][0] for x in kmeans_clusters[c]]
