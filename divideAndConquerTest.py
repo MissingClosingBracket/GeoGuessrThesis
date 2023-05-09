@@ -11,7 +11,7 @@ from helperFunctions import pointsToListOfLatAndLongs, getDistance, generate_ran
 #start here by defining area and grid size:
 gridSize = (35,35)
 guesses = 3
-place = 'malta'
+place = 'grenada'
 diagonalDirection = 'B'
 iter = 100_000
 

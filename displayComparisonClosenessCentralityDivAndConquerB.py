@@ -8,7 +8,7 @@ import matplotlib.lines as lines
 
 #Bornholm or malta?
 #place = 'bornholm'
-place = 'malta'
+place = 'bornholm'
 
 graph = nx.MultiGraph
 
@@ -22,7 +22,7 @@ else:
     graph = nx.compose_all([graph1, graph2, graph3])
 
 #plot graph, leave open
-fig, ax = ox.plot_graph(graph, show=False, close=False, node_size=4, figsize=(14,13))
+fig, ax = ox.plot_graph(graph, show=False, close=False, node_size=4, figsize=(15,14))
 
 latsDivAndConqB = []
 lonsDivAndConqB = []
@@ -59,6 +59,6 @@ for x in range(0, len(latsCC)):
     ax.add_line(lines.Line2D(xdata=[guessDivAndConqB[0],guessCC[0]],ydata=[guessDivAndConqB[1],guessCC[1]],color=color1,linewidth=2, zorder=100, label='Distance: ' + str(round(dist,3)) + 'km'))
 
 #draw and show
-ax.legend(loc="upper left")
+ax.legend(loc="upper right")
 plt.draw()
 plt.show()

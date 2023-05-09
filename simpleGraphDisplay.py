@@ -6,12 +6,14 @@ import networkx as nx
 
 #Bornholm or malta?
 #place = 'bornholm'
-place = 'malta'
+place = 'grenada'
 
 graph = nx.MultiGraph
 
 #Get graph
-if place != 'malta':
+if place == 'bornholm':
+    graph :nx.MultiDiGraph = ox.load_graphml("./savedGraphs/" + place + ".graphml")
+if place == 'grenada':
     graph :nx.MultiDiGraph = ox.load_graphml("./savedGraphs/" + place + ".graphml")
 else:
     graph1 = ox.load_graphml("./savedGraphs/" + place + "1.graphml")
@@ -26,7 +28,7 @@ edges[['osmid','length']]
 ec = get_edge_colors_by_attr(graph, attr='length')
 
 #plot graph, leave open
-fig, ax = ox.plot_graph(graph, edge_color=ec, show=False, close=False, node_size=4, figsize=(14,13))
+fig, ax = ox.plot_graph(graph, edge_color=ec, show=False, close=False, node_size=4, figsize=(20,20))
 
 #make color map label
 norm=plt.Normalize(vmin=edges['length'].min(), vmax=edges['length'].max())

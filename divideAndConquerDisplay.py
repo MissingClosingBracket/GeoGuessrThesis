@@ -10,7 +10,7 @@ import networkx as nx
 #start here by defining area and grid size:
 gridSize = (35,35)
 guesses = 3
-place = 'malta'
+place = 'grenada'
 showGrid = False
 showCenterPoints = False
 showMidpoints = True
@@ -21,8 +21,10 @@ diagonalDirection = 'B'
 graph = nx.MultiGraph
 
 #Get graph
-if place != 'malta':
+if place == 'bornholm':
     graph :nx.MultiDiGraph = ox.load_graphml("./savedGraphs/" + place + ".graphml")
+if place == 'grenada':
+    graph :nx.MultiDiGraph = ox.load_graphml("./savedGraphs/" + place + ".graphml") 
 else:
     graph1 = ox.load_graphml("./savedGraphs/" + place + "1.graphml")
     graph2 = ox.load_graphml("./savedGraphs/" + place + "2.graphml")
