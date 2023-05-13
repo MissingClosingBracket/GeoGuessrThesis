@@ -8,8 +8,8 @@ import networkx as nx
 
 #start here by defining area and grid size:
 
-place = 'malta'
-simplifier = 10
+place = 'bornholm'
+simplifier = 5
 
 graph = nx.MultiGraph
 
@@ -89,7 +89,7 @@ for x in points:
 print(max_dist)
 print(nodes)
 
-fig, ax = ox.plot_graph(graph, show=False, close=False, node_size=4, figsize=(14,13))
+fig, ax = ox.plot_graph(graph, show=False, close=False, node_size=4, figsize=(13,12))
 
 ax.scatter([x[0] for x in nodes], [y[1] for y in nodes], color='purple',s=100,zorder=1000)
 ax.add_line(lines.Line2D(xdata=[x[0] for x in nodes],ydata=[y[1] for y in nodes],color="pink",linewidth=2,label='Distance: ' + str(round(max_dist,2)) + 'km'))
@@ -100,4 +100,4 @@ plt.draw()
 plt.show()
 
 #Bornholm:((15.12845159375, 55.06021289375), (14.71319220625, 55.222993624999994)) -> 49.39168946948267km
-#Malta: 
+#Malta: ((14.531639379999998, 35.809913025), (14.202205349999996, 36.070482760000004)) -> 46.16277106066941
