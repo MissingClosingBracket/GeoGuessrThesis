@@ -58,9 +58,9 @@ parcelLockers = pointsToListOfLatAndLongs(sample_points(graph, 10))
 companies = pointsToListOfLatAndLongs(sample_points(graph, 10))
 
 for x in range(0, 10):
-    #parcelLocker, weight 100
+    #parcelLocker, weight 1000
     centerPoints.append(((parcelLockers[0][x], parcelLockers[1][x]), 1000))
-    #company weight 50
+    #company weight 500
     centerPoints.append(((companies[0][x], companies[1][x]), 500))
 
 #define the number of clusers and number of initial centroid placements (n_init)
