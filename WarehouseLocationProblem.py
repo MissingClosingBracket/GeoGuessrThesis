@@ -1,6 +1,5 @@
 import osmnx as ox
 import geopandas as gpd
-from helperFunctions import getDistance, makeGrid, placeInBoxes, Box
 from shapely.geometry import Point,LineString,mapping
 import matplotlib.lines as lines
 import matplotlib.pyplot as plt
@@ -10,10 +9,12 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 import matplotlib.colors as mcolors
+from osmnx.utils_geo import sample_points
+from helperFunctions import pointsToListOfLatAndLongs
 
 #start here by defining area and grid size:
 guesses = 3
-place = 'malta'
+place = 'bornholm'
 
 graph = nx.MultiGraph
 
@@ -46,12 +47,21 @@ for index, row in edges.iterrows():
     #after that, calculate the distance (km) and get the center of the two points
     length = len(coords)
     for x in range(0, length-1):
-        distance = getDistance(coords[x], coords[x+1])
         centerPoint = (
             (coords[x][0] + coords[x+1][0])/2.0, 
             (coords[x][1] + coords[x+1][1])/2.0
             )
-        centerPoints.append([centerPoint, distance])
+        centerPoints.append([centerPoint, 0.1])
+
+#place 10 parcel lockers and 10 companies randomly
+parcelLockers = pointsToListOfLatAndLongs(sample_points(graph, 10))
+companies = pointsToListOfLatAndLongs(sample_points(graph, 10))
+
+for x in range(0, 10):
+    #parcelLocker, weight 100
+    centerPoints.append(((parcelLockers[0][x], parcelLockers[1][x]), 1000))
+    #company weight 50
+    centerPoints.append(((companies[0][x], companies[1][x]), 500))
 
 #define the number of clusers and number of initial centroid placements (n_init)
 kmeans = KMeans(n_clusters=guesses, init='k-means++', max_iter=1000)
@@ -76,47 +86,20 @@ fig = plt.figure(figsize=(11,10))
 ax = fig.add_subplot(111)
 ax.axes.set_facecolor('black')
 
-falseTotal = 0
-print(len(centerPoints))
-
 for c in range(0, len(kmeans_clusters)):
-    cluster = kmeans.cluster_centers_[c]
-    falselyAssigned = []
-
-    for wcoords in kmeans_clusters[c]:
-        coords = wcoords[0]
-        distToAssignedCluster = getDistance(coords, cluster)
-        for i in range(0, len(kmeans_clusters)):
-            otherCentroid = kmeans.cluster_centers_[i]
-            if getDistance(otherCentroid, coords) < distToAssignedCluster:
-                falselyAssigned.append(coords)
-                falseTotal+=1
     color = cMap(0.9-(c*0.1))
+    cluster = kmeans.cluster_centers_[c]
     print(cluster)
     lats = [x[0][0] for x in kmeans_clusters[c]]
     lons = [x[0][1] for x in kmeans_clusters[c]]
     weights = [x[1] for x in kmeans_clusters[c]]
-    ax.scatter(lats, lons, s=[x*1 for x in weights], color=color)
-    ax.scatter(cluster[0], cluster[1], s=50, color='white')
-    ax.scatter(cluster[0], cluster[1], s=25, color='blue')
-    ax.scatter(cluster[0], cluster[1], s=5, color='black')
+    ax.scatter(lats, lons, s=0.8, color=color)
+    ax.scatter(cluster[0], cluster[1], s=50, color='blue')
+ax.scatter(kmeans.cluster_centers_[0][0], kmeans.cluster_centers_[0][1], s=50, color='blue', label="Warehouse")
 
-    if c == len(kmeans_clusters) - 1:
-        ax.scatter([p[0] for p in falselyAssigned], [p[1] for p in falselyAssigned], s=10, zorder=1000,color='white', label='Falsely assigned nodes: ' + str(falseTotal))
-    else:
-        ax.scatter([p[0] for p in falselyAssigned], [p[1] for p in falselyAssigned], s=10, zorder=1000, color='white')
+#plot companies and parcel lockers
+ax.scatter(parcelLockers[0], parcelLockers[1], s=30, color='white', label="Parcel locker/shop")
+ax.scatter(companies[0], companies[1], s=30, color='red', label="Company")
 
-ax.legend(loc="upper right")
+plt.legend(loc="upper right")
 plt.show()
-
-'''
-Bornholm:
-[14.76468147 55.15867943]
-[14.92302334 55.1232714 ]
-[15.07548271 55.06935343]
-
-Malta:
-[14.40612363 35.90931744]
-[14.25970596 36.04257726]
-[14.49667782 35.8727472 ]
-'''
